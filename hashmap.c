@@ -52,8 +52,13 @@ void enlarge(HashMap * map) {
 
 
 HashMap * createMap(long capacity) {
-
-    return NULL;
+    HashMap * Mapa = (HashMap *)malloc(sizeof(HashMap));
+    Mapa->buckets = (Pair **)malloc(sizeof(Pair *) * capacity); //esto deberia dejar nulas todas las casillas bucket
+    Mapa->size = 0;
+    Mapa->capacity = capacity;
+    Mapa->current = -1;
+    
+    return Mapa;
 }
 
 void eraseMap(HashMap * map,  char * key) {    
