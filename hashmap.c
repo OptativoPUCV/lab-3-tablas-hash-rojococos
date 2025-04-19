@@ -139,20 +139,7 @@ Pair * firstMap(HashMap * map) {
 
 Pair * nextMap(HashMap * map) {
     if(map->current == -1) return NULL;
-    //long aux = map->current + 1;
-    /* while(aux != map->current - 1){
-        if(aux >= map->capacity) aux = 0;
-        if(map->buckets[aux] != NULL)
-            if(map->buckets[aux]->key != NULL){
-                map->current = aux;
-                return map->buckets[aux];
-            }
-        aux++;
-        
-    }
-    printf("no hay otro elemento valido aparte del primero\n");
-    return NULL;
-    */
+    
     for (long aux = map->current + 1; aux < map->capacity; aux++){
         if(map->buckets[aux] != NULL)
             if(map->buckets[aux]->key != NULL){
