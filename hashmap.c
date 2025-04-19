@@ -40,8 +40,34 @@ int is_equal(void* key1, void* key2){
 
 
 void insertMap(HashMap * map, char * key, void * value) {
+    if (map->size == map->capacity){
+        printf("la tabla hash esta llena");
+        return;
+    }
 
+    if (searchMap(map, key) != NULL){
+        printf("la clave ya existe");
+        return;
+    }
+    
+    size_t posi = hash(key, map->capacity);
+    while (map->buckets[posi] != NULL){
+        posi++;
+    }
 
+    
+    if (posi == map->capacity){
+        posi = 0; //por si el bucket libre estaba más atras
+        while (map->buckets[posi] != NULL){
+            posi++;
+        }
+    }
+
+    Pair * nuevoPar = createPair(key, value);
+    map->buckets[posi] = nuevoPar;
+    map->size++;
+    map->current = posi;
+    return;
 }
 
 void enlarge(HashMap * map) {
@@ -67,8 +93,16 @@ void eraseMap(HashMap * map,  char * key) {
 }
 
 Pair * searchMap(HashMap * map,  char * key) {   
-
-
+    size_t posiTeo = hash(key, map->capacity);
+    while(map->buckets[posiTeo] != NULL){
+        if(is_equal(map->buckets[posiTeo]->key, key)){
+            map->current = posiTeo;
+            return map->buckets[posiTeo];
+        }
+        if(posiTeo == map->capacity) posiTeo = 0;
+        else posiTeo++;
+    }
+    printf("la clave no esta");
     return NULL;
 }
 
