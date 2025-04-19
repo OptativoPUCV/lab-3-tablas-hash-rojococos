@@ -72,8 +72,22 @@ void insertMap(HashMap * map, char * key, void * value) {
 
 void enlarge(HashMap * map) {
     enlarge_called = 1; //no borrar (testing purposes)
-
-
+    HashMap * nuevoMap = createMap(map->capacity * 2);
+    nuevoMap->capacity = map->capacity * 2;
+    nuevoMap->size = 1;
+    map->size --;
+    Pair * Elemento = firstMap(map);
+    insertMap(nuevoMap, Elemento->key, Elemento->value);
+    while(map->size != 0){
+        nuevoMap->size ++;
+        Pair * Elemento = nextMap(map);
+        insertMap(nuevoMap, Elemento->key, Elemento->value);
+        map->size --;
+        
+    }
+    free(map);
+    map = nuevoMap;
+    return;
 }
 
 
@@ -87,8 +101,17 @@ HashMap * createMap(long capacity) {
     return Mapa;
 }
 
-void eraseMap(HashMap * map,  char * key) {    
 
+//no menciona que se considere la opcion de que la clave no este
+void eraseMap(HashMap * map,  char * key) {    
+    size_t posi = hash(key, map->capacity);
+    while(map->buckets[posi]->key != key){
+        if(posi == map->capacity) posi = 0;
+        else posi++;
+    }
+    map->buckets[posi]->key = NULL;
+    map->size --;
+    //no menciona el actualizar el current
 
 }
 
@@ -107,11 +130,21 @@ Pair * searchMap(HashMap * map,  char * key) {
 }
 
 Pair * firstMap(HashMap * map) {
+    size_t posi = 0;
+    while(map->buckets[posi] == NULL || map->buckets[posi]->key == NULL){
+        posi++;
+    }
 
-    return NULL;
+    map->current = posi;
+    return map->buckets[posi];
 }
 
 Pair * nextMap(HashMap * map) {
-
-    return NULL;
+    size_t posi = map->current + 1;
+    while(map->buckets[posi] == NULL || map->buckets[posi]->key == NULL){
+        if(posi == map->capacity) posi = 0;
+        posi++;
+    }
+    map->current = posi;
+    return map->buckets[posi];
 }
